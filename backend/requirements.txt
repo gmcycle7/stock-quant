@@ -1,0 +1,31 @@
+# ============================================
+# Stock Quant Backend Dependencies
+# ============================================
+
+# Web framework
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+
+# Data & computation
+pandas==2.2.3
+numpy==2.2.1
+
+# Market data provider
+yfinance==0.2.51
+
+# Database
+aiosqlite==0.20.0
+
+# Data validation
+pydantic==2.10.4
+
+# CORS support (built into FastAPI/Starlette)
+# HTTP client
+httpx==0.28.1
+
+# Environment variables
+python-dotenv==1.0.1
+
+# Testing
+pytest==8.3.4
+pytest-asyncio==0.25.0
