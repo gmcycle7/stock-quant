@@ -1,9 +1,9 @@
 # StockQuant — 量化交易研究平台
 
-[![CI](https://github.com/YOUR_USERNAME/stock-quant/actions/workflows/ci.yml/badge.svg)](https://github.com/YOUR_USERNAME/stock-quant/actions/workflows/ci.yml)
-[![Deploy](https://github.com/YOUR_USERNAME/stock-quant/actions/workflows/deploy.yml/badge.svg)](https://github.com/YOUR_USERNAME/stock-quant/actions/workflows/deploy.yml)
+[![CI](https://github.com/gmcycle7/stock-quant/actions/workflows/ci.yml/badge.svg)](https://github.com/gmcycle7/stock-quant/actions/workflows/ci.yml)
+[![Deploy](https://github.com/gmcycle7/stock-quant/actions/workflows/deploy.yml/badge.svg)](https://github.com/gmcycle7/stock-quant/actions/workflows/deploy.yml)
 
-> **線上 Demo：** [https://YOUR_USERNAME.github.io/stock-quant/](https://YOUR_USERNAME.github.io/stock-quant/)
+> **線上 Demo：** [https://gmcycle7.github.io/stock-quant/](https://gmcycle7.github.io/stock-quant/)
 >
 > 上傳到 GitHub 後會自動部署，Demo 頁面使用內建範例資料運行，不需要後端伺服器。
 
