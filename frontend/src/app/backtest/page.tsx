@@ -26,16 +26,19 @@ import MetricCard from "@/components/MetricCard";
 import EquityCurve from "@/components/charts/EquityCurve";
 import DrawdownChart from "@/components/charts/DrawdownChart";
 import PriceChart from "@/components/charts/PriceChart";
+import { useI18n } from "@/lib/i18n";
 
 export default function BacktestPage() {
+  const { t } = useI18n();
   return (
-    <Suspense fallback={<div style={{ color: "var(--muted)" }}>Loading...</div>}>
+    <Suspense fallback={<div style={{ color: "var(--muted)" }}>{t("loading")}</div>}>
       <BacktestContent />
     </Suspense>
   );
 }
 
 function BacktestContent() {
+  const { t } = useI18n();
   const searchParams = useSearchParams();
   const preselectedStrategy = searchParams.get("strategy") || "";
 
@@ -177,14 +180,14 @@ function BacktestContent() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">Strategy Backtest</h1>
+      <h1 className="text-2xl font-bold mb-6">{t("bt_title")}</h1>
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Left Panel: Configuration */}
         <div className="lg:col-span-1" style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
           {/* Strategy Selection */}
           <div className="card">
-            <h2 className="text-sm font-semibold mb-3" style={{ color: "var(--muted)" }}>Strategy</h2>
+            <h2 className="text-sm font-semibold mb-3" style={{ color: "var(--muted)" }}>{t("bt_strategy")}</h2>
             <select
               value={strategyName}
               onChange={(e) => setStrategyName(e.target.value)}
@@ -237,40 +240,40 @@ function BacktestContent() {
 
           {/* Symbol & Date Range */}
           <div className="card">
-            <h2 className="text-sm font-semibold mb-3" style={{ color: "var(--muted)" }}>Data</h2>
-            <label className="text-xs block mb-1" style={{ color: "var(--muted)" }}>Symbol</label>
+            <h2 className="text-sm font-semibold mb-3" style={{ color: "var(--muted)" }}>{t("bt_data")}</h2>
+            <label className="text-xs block mb-1" style={{ color: "var(--muted)" }}>{t("symbol")}</label>
             <select value={symbol} onChange={(e) => setSymbol(e.target.value)} className="select-field mb-2">
               {symbols.map((s) => (
                 <option key={s} value={s}>{s}</option>
               ))}
             </select>
-            <label className="text-xs block mb-1" style={{ color: "var(--muted)" }}>Start Date</label>
+            <label className="text-xs block mb-1" style={{ color: "var(--muted)" }}>{t("bt_start")}</label>
             <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="input-field mb-2" />
-            <label className="text-xs block mb-1" style={{ color: "var(--muted)" }}>End Date</label>
+            <label className="text-xs block mb-1" style={{ color: "var(--muted)" }}>{t("bt_end")}</label>
             <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} className="input-field" />
           </div>
 
           {/* Backtest Settings */}
           <div className="card">
-            <h2 className="text-sm font-semibold mb-3" style={{ color: "var(--muted)" }}>Settings</h2>
-            <label className="text-xs block mb-1" style={{ color: "var(--muted)" }}>Initial Capital ($)</label>
+            <h2 className="text-sm font-semibold mb-3" style={{ color: "var(--muted)" }}>{t("bt_settings")}</h2>
+            <label className="text-xs block mb-1" style={{ color: "var(--muted)" }}>{t("bt_capital")}</label>
             <input type="number" value={initialCapital} onChange={(e) => setInitialCapital(Number(e.target.value))} className="input-field mb-2" />
-            <label className="text-xs block mb-1" style={{ color: "var(--muted)" }}>Commission (%)</label>
+            <label className="text-xs block mb-1" style={{ color: "var(--muted)" }}>{t("bt_commission")}</label>
             <input type="number" value={commissionPct} step={0.0001} onChange={(e) => setCommissionPct(Number(e.target.value))} className="input-field mb-2" />
-            <label className="text-xs block mb-1" style={{ color: "var(--muted)" }}>Slippage (%)</label>
+            <label className="text-xs block mb-1" style={{ color: "var(--muted)" }}>{t("bt_slippage")}</label>
             <input type="number" value={slippagePct} step={0.0001} onChange={(e) => setSlippagePct(Number(e.target.value))} className="input-field mb-2" />
-            <label className="text-xs block mb-1" style={{ color: "var(--muted)" }}>Position Size (%)</label>
+            <label className="text-xs block mb-1" style={{ color: "var(--muted)" }}>{t("bt_pos_size")}</label>
             <input type="number" value={positionSizePct} onChange={(e) => setPositionSizePct(Number(e.target.value))} className="input-field mb-2" />
-            <label className="text-xs block mb-1" style={{ color: "var(--muted)" }}>Max Positions</label>
+            <label className="text-xs block mb-1" style={{ color: "var(--muted)" }}>{t("bt_max_pos")}</label>
             <input type="number" value={maxPositions} onChange={(e) => setMaxPositions(Number(e.target.value))} className="input-field mb-2" />
-            <label className="text-xs block mb-1" style={{ color: "var(--muted)" }}>Stop Loss % (optional)</label>
+            <label className="text-xs block mb-1" style={{ color: "var(--muted)" }}>{t("bt_stop_loss")}</label>
             <input type="text" value={stopLossPct} onChange={(e) => setStopLossPct(e.target.value)} placeholder="e.g., 5" className="input-field mb-2" />
-            <label className="text-xs block mb-1" style={{ color: "var(--muted)" }}>Take Profit % (optional)</label>
+            <label className="text-xs block mb-1" style={{ color: "var(--muted)" }}>{t("bt_take_profit")}</label>
             <input type="text" value={takeProfitPct} onChange={(e) => setTakeProfitPct(e.target.value)} placeholder="e.g., 15" className="input-field" />
           </div>
 
           <button onClick={handleRun} disabled={running} className="btn-primary" style={{ width: "100%", padding: ".75rem 1rem", textAlign: "center" }}>
-            {running ? "Running Backtest..." : "Run Backtest"}
+            {running ? t("bt_running") : t("bt_run")}
           </button>
         </div>
 
@@ -284,13 +287,13 @@ function BacktestContent() {
 
           {!result && !running && !error && (
             <div className="card text-center" style={{ padding: "4rem 2rem", color: "var(--muted)" }}>
-              Configure your backtest on the left and click &quot;Run Backtest&quot; to see results here.
+              {t("bt_placeholder")}
             </div>
           )}
 
           {running && (
             <div className="card text-center" style={{ padding: "4rem 2rem", color: "var(--accent)" }}>
-              Running backtest... This may take a few seconds.
+              {t("bt_running_msg")}
             </div>
           )}
 
@@ -298,22 +301,22 @@ function BacktestContent() {
             <>
               {/* Metric Cards */}
               <div className="grid-4">
-                <MetricCard label="Total Return" value={result.metrics.total_return} suffix="%" positive={result.metrics.total_return >= 0} />
-                <MetricCard label="Sharpe Ratio" value={result.metrics.sharpe_ratio} positive={result.metrics.sharpe_ratio > 0.5 ? true : result.metrics.sharpe_ratio < 0 ? false : null} />
-                <MetricCard label="Max Drawdown" value={result.metrics.max_drawdown} suffix="%" positive={false} />
-                <MetricCard label="Win Rate" value={result.metrics.win_rate} suffix="%" positive={result.metrics.win_rate > 50 ? true : null} />
-                <MetricCard label="Annual Return" value={result.metrics.annualized_return} suffix="%" positive={result.metrics.annualized_return >= 0} />
-                <MetricCard label="Sortino Ratio" value={result.metrics.sortino_ratio} />
-                <MetricCard label="Profit Factor" value={result.metrics.profit_factor} positive={result.metrics.profit_factor > 1 ? true : result.metrics.profit_factor < 1 ? false : null} />
-                <MetricCard label="# Trades" value={result.metrics.num_trades} />
+                <MetricCard label={t("total_return")} value={result.metrics.total_return} suffix="%" positive={result.metrics.total_return >= 0} />
+                <MetricCard label={t("sharpe_ratio")} value={result.metrics.sharpe_ratio} positive={result.metrics.sharpe_ratio > 0.5 ? true : result.metrics.sharpe_ratio < 0 ? false : null} />
+                <MetricCard label={t("max_drawdown")} value={result.metrics.max_drawdown} suffix="%" positive={false} />
+                <MetricCard label={t("win_rate")} value={result.metrics.win_rate} suffix="%" positive={result.metrics.win_rate > 50 ? true : null} />
+                <MetricCard label={t("annual_return")} value={result.metrics.annualized_return} suffix="%" positive={result.metrics.annualized_return >= 0} />
+                <MetricCard label={t("sortino_ratio")} value={result.metrics.sortino_ratio} />
+                <MetricCard label={t("profit_factor")} value={result.metrics.profit_factor} positive={result.metrics.profit_factor > 1 ? true : result.metrics.profit_factor < 1 ? false : null} />
+                <MetricCard label={t("num_trades")} value={result.metrics.num_trades} />
               </div>
 
               {/* Action buttons */}
               <div className="flex flex-wrap gap-2">
-                <button onClick={handleSaveToLeaderboard} className="btn-secondary text-xs">Save to Leaderboard</button>
-                <button onClick={handleExportTrades} className="btn-secondary text-xs">Export Trades CSV</button>
-                <button onClick={handleExportEquity} className="btn-secondary text-xs">Export Equity CSV</button>
-                <button onClick={handleExportJSON} className="btn-secondary text-xs">Export Summary JSON</button>
+                <button onClick={handleSaveToLeaderboard} className="btn-secondary text-xs">{t("bt_save_lb")}</button>
+                <button onClick={handleExportTrades} className="btn-secondary text-xs">{t("bt_export_trades")}</button>
+                <button onClick={handleExportEquity} className="btn-secondary text-xs">{t("bt_export_equity")}</button>
+                <button onClick={handleExportJSON} className="btn-secondary text-xs">{t("bt_export_json")}</button>
                 {saveMsg && (
                   <span className="text-xs self-center" style={{ color: "var(--green)" }}>{saveMsg}</span>
                 )}
@@ -321,7 +324,7 @@ function BacktestContent() {
 
               {/* Equity Curve */}
               <div className="card">
-                <h3 className="text-sm font-semibold mb-3" style={{ color: "var(--muted)" }}>Equity Curve</h3>
+                <h3 className="text-sm font-semibold mb-3" style={{ color: "var(--muted)" }}>{t("bt_equity_curve")}</h3>
                 <EquityCurve
                   data={result.equity_curve}
                   benchmarkData={result.benchmark}
@@ -331,13 +334,13 @@ function BacktestContent() {
 
               {/* Drawdown */}
               <div className="card">
-                <h3 className="text-sm font-semibold mb-3" style={{ color: "var(--muted)" }}>Drawdown</h3>
+                <h3 className="text-sm font-semibold mb-3" style={{ color: "var(--muted)" }}>{t("bt_drawdown")}</h3>
                 <DrawdownChart data={result.equity_curve} />
               </div>
 
               {/* Price with signals */}
               <div className="card">
-                <h3 className="text-sm font-semibold mb-3" style={{ color: "var(--muted)" }}>Price Chart with Signals</h3>
+                <h3 className="text-sm font-semibold mb-3" style={{ color: "var(--muted)" }}>{t("bt_price_signals")}</h3>
                 <PriceChart
                   data={result.equity_curve.map((e) => ({ ...e, close: e.equity }))}
                   trades={result.trades}
@@ -348,20 +351,20 @@ function BacktestContent() {
               {/* Trade Log */}
               <div className="card">
                 <h3 className="text-sm font-semibold mb-3" style={{ color: "var(--muted)" }}>
-                  Trade Log <span className="font-normal">({result.trades.length} trades)</span>
+                  {t("bt_trade_log")} <span className="font-normal">({result.trades.length} {t("bt_trades_count")})</span>
                 </h3>
                 <div className="overflow-x-auto" style={{ maxHeight: "20rem", overflowY: "auto" }}>
                   <table className="data-table">
                     <thead style={{ position: "sticky", top: 0, background: "var(--card-bg)" }}>
                       <tr>
-                        <th>Date</th>
-                        <th>Side</th>
-                        <th style={{ textAlign: "right" }}>Price</th>
-                        <th style={{ textAlign: "right" }}>Shares</th>
-                        <th style={{ textAlign: "right" }}>Commission</th>
-                        <th style={{ textAlign: "right" }}>P&L</th>
-                        <th style={{ textAlign: "right" }}>P&L %</th>
-                        <th>Reason</th>
+                        <th>{t("col_date")}</th>
+                        <th>{t("col_side")}</th>
+                        <th style={{ textAlign: "right" }}>{t("col_price")}</th>
+                        <th style={{ textAlign: "right" }}>{t("col_shares")}</th>
+                        <th style={{ textAlign: "right" }}>{t("col_commission")}</th>
+                        <th style={{ textAlign: "right" }}>{t("col_pnl")}</th>
+                        <th style={{ textAlign: "right" }}>{t("col_pnl_pct")}</th>
+                        <th>{t("col_reason")}</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -390,7 +393,7 @@ function BacktestContent() {
 
               {/* Additional Metrics */}
               <div className="card">
-                <h3 className="text-sm font-semibold mb-3" style={{ color: "var(--muted)" }}>Detailed Metrics</h3>
+                <h3 className="text-sm font-semibold mb-3" style={{ color: "var(--muted)" }}>{t("bt_detail_metrics")}</h3>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-xs">
                   {Object.entries(result.metrics).map(([key, value]) => (
                     <div

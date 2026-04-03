@@ -6,8 +6,10 @@
 
 import { useEffect, useState } from "react";
 import { healthCheck } from "@/lib/api";
+import { useI18n } from "@/lib/i18n";
 
 export default function SettingsPage() {
+  const { t } = useI18n();
   const [backendStatus, setBackendStatus] = useState<string>("Checking...");
   const [backendMessage, setBackendMessage] = useState("");
 
@@ -27,11 +29,11 @@ export default function SettingsPage() {
 
   return (
     <div style={{ maxWidth: "40rem" }}>
-      <h1 className="text-2xl font-bold mb-6">Settings</h1>
+      <h1 className="text-2xl font-bold mb-6">{t("set_title")}</h1>
 
       {/* Backend Status */}
       <div className="card mb-4">
-        <h2 className="text-sm font-semibold mb-3" style={{ color: "var(--muted)" }}>Backend Connection</h2>
+        <h2 className="text-sm font-semibold mb-3" style={{ color: "var(--muted)" }}>{t("set_backend")}</h2>
         <div className="flex items-center gap-2 mb-2">
           <div
             style={{
@@ -55,7 +57,7 @@ export default function SettingsPage() {
           <p className="text-xs mb-2" style={{ color: "var(--muted)" }}>{backendMessage}</p>
         )}
         <p className="text-xs" style={{ color: "var(--muted)" }}>
-          API URL:{" "}
+          {t("set_api_url")}:{" "}
           <code style={{ color: "var(--accent)", background: "var(--background)", padding: ".1rem .3rem", borderRadius: ".25rem" }}>
             {process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}
           </code>
@@ -64,7 +66,7 @@ export default function SettingsPage() {
 
       {/* Default Parameters */}
       <div className="card mb-4">
-        <h2 className="text-sm font-semibold mb-3" style={{ color: "var(--muted)" }}>Default Parameters</h2>
+        <h2 className="text-sm font-semibold mb-3" style={{ color: "var(--muted)" }}>{t("set_defaults")}</h2>
         <div style={{ display: "flex", flexDirection: "column", gap: ".5rem" }}>
           {[
             { label: "Initial Capital", value: "$100,000" },
@@ -88,11 +90,10 @@ export default function SettingsPage() {
       {/* API Notes for Future Brokerage Integration */}
       <div className="card mb-4">
         <h2 className="text-sm font-semibold mb-3" style={{ color: "var(--muted)" }}>
-          Future: Brokerage Integration
+          {t("set_future")}
         </h2>
         <p className="text-xs mb-3" style={{ color: "var(--muted)" }}>
-          This platform currently supports paper trading only. To add live brokerage integration
-          in the future, you would:
+          {t("set_future_desc")}
         </p>
         <ol className="text-xs list-decimal list-inside" style={{ color: "var(--muted)", display: "flex", flexDirection: "column", gap: ".25rem" }}>
           <li>Create a new module at <code style={{ color: "var(--accent)" }}>backend/quant/broker/</code></li>
@@ -112,13 +113,13 @@ export default function SettingsPage() {
             border: "1px solid rgba(234, 179, 8, 0.2)",
           }}
         >
-          WARNING: Live trading carries real financial risk. Proceed with extreme caution.
+          {t("set_future_warn")}
         </p>
       </div>
 
       {/* System Info */}
       <div className="card">
-        <h2 className="text-sm font-semibold mb-3" style={{ color: "var(--muted)" }}>System Info</h2>
+        <h2 className="text-sm font-semibold mb-3" style={{ color: "var(--muted)" }}>{t("set_sys_info")}</h2>
         <div
           className="text-xs"
           style={{ color: "var(--muted)", display: "flex", flexDirection: "column", gap: ".375rem" }}

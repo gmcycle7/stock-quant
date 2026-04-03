@@ -23,8 +23,10 @@ import {
   PaperTrade,
 } from "@/lib/api";
 import MetricCard from "@/components/MetricCard";
+import { useI18n } from "@/lib/i18n";
 
 export default function PaperTradingPage() {
+  const { t } = useI18n();
   const [portfolio, setPortfolio] = useState<PortfolioSummary | null>(null);
   const [trades, setTrades] = useState<PaperTrade[]>([]);
   const [symbols, setSymbols] = useState<string[]>([]);
@@ -84,11 +86,11 @@ export default function PaperTradingPage() {
   };
 
   const handleReset = async () => {
-    if (!confirm("Reset portfolio to initial state? All positions and trades will be deleted.")) return;
+    if (!confirm(t("pt_reset_confirm"))) return;
     try {
       await resetPortfolio(1);
       await loadData();
-      setOrderMessage("Portfolio reset successfully");
+      setOrderMessage(t("pt_reset_ok"));
     } catch {
       setOrderMessage("Reset failed");
     }
@@ -97,7 +99,7 @@ export default function PaperTradingPage() {
   if (loading) {
     return (
       <div className="text-center" style={{ padding: "3rem 0", color: "var(--muted)" }}>
-        Loading...
+        {t("loading")}
       </div>
     );
   }
@@ -105,8 +107,8 @@ export default function PaperTradingPage() {
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Paper Trading</h1>
-        <button onClick={handleReset} className="btn-secondary text-xs">Reset Portfolio</button>
+        <h1 className="text-2xl font-bold">{t("pt_title")}</h1>
+        <button onClick={handleReset} className="btn-secondary text-xs">{t("pt_reset")}</button>
       </div>
 
       {/* Disclaimer */}
@@ -120,7 +122,7 @@ export default function PaperTradingPage() {
           borderRadius: ".5rem",
         }}
       >
-        This is simulated trading with fake money. No real orders are placed.
+        {t("pt_disclaimer")}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -129,23 +131,23 @@ export default function PaperTradingPage() {
           {/* Portfolio Summary */}
           {portfolio && !portfolio.error && (
             <div className="grid-2">
-              <MetricCard label="Total Equity" value={`$${portfolio.total_equity.toLocaleString()}`} />
-              <MetricCard label="Cash" value={`$${portfolio.cash.toLocaleString()}`} />
-              <MetricCard label="Positions" value={`$${portfolio.positions_value.toLocaleString()}`} />
-              <MetricCard label="Return" value={portfolio.total_return_pct} suffix="%" positive={portfolio.total_return_pct >= 0} />
+              <MetricCard label={t("total_equity")} value={`$${portfolio.total_equity.toLocaleString()}`} />
+              <MetricCard label={t("cash")} value={`$${portfolio.cash.toLocaleString()}`} />
+              <MetricCard label={t("positions_val")} value={`$${portfolio.positions_value.toLocaleString()}`} />
+              <MetricCard label={t("total_return")} value={portfolio.total_return_pct} suffix="%" positive={portfolio.total_return_pct >= 0} />
             </div>
           )}
 
           {/* Order Entry */}
           <div className="card">
-            <h2 className="text-sm font-semibold mb-3" style={{ color: "var(--muted)" }}>Place Order</h2>
+            <h2 className="text-sm font-semibold mb-3" style={{ color: "var(--muted)" }}>{t("pt_place_order")}</h2>
 
-            <label className="text-xs block mb-1" style={{ color: "var(--muted)" }}>Symbol</label>
+            <label className="text-xs block mb-1" style={{ color: "var(--muted)" }}>{t("symbol")}</label>
             <select value={orderSymbol} onChange={(e) => setOrderSymbol(e.target.value)} className="select-field mb-3">
               {symbols.map((s) => <option key={s} value={s}>{s}</option>)}
             </select>
 
-            <label className="text-xs block mb-1" style={{ color: "var(--muted)" }}>Side</label>
+            <label className="text-xs block mb-1" style={{ color: "var(--muted)" }}>{t("pt_side")}</label>
             <div className="flex gap-2 mb-3">
               <button
                 onClick={() => setOrderSide("buy")}
@@ -183,7 +185,7 @@ export default function PaperTradingPage() {
               </button>
             </div>
 
-            <label className="text-xs block mb-1" style={{ color: "var(--muted)" }}>Quantity (shares)</label>
+            <label className="text-xs block mb-1" style={{ color: "var(--muted)" }}>{t("pt_qty")}</label>
             <input
               type="number"
               value={orderQuantity}
@@ -193,7 +195,7 @@ export default function PaperTradingPage() {
             />
 
             <button onClick={handlePlaceOrder} disabled={orderLoading} className="btn-primary" style={{ width: "100%" }}>
-              {orderLoading ? "Placing..." : `${orderSide.toUpperCase()} ${orderQuantity} ${orderSymbol}`}
+              {orderLoading ? t("pt_placing") : `${orderSide.toUpperCase()} ${orderQuantity} ${orderSymbol}`}
             </button>
 
             {orderMessage && (
@@ -205,10 +207,10 @@ export default function PaperTradingPage() {
         {/* Middle: Positions */}
         <div className="card">
           <h2 className="text-sm font-semibold mb-3" style={{ color: "var(--muted)" }}>
-            Open Positions <span className="font-normal">({portfolio?.positions.length || 0})</span>
+            {t("pt_open_pos")} <span className="font-normal">({portfolio?.positions.length || 0})</span>
           </h2>
           {(!portfolio?.positions || portfolio.positions.length === 0) ? (
-            <p className="text-xs" style={{ color: "var(--muted)" }}>No open positions</p>
+            <p className="text-xs" style={{ color: "var(--muted)" }}>{t("pt_no_pos")}</p>
           ) : (
             <div style={{ display: "flex", flexDirection: "column", gap: ".5rem" }}>
               {portfolio.positions.map((pos) => (
@@ -249,11 +251,11 @@ export default function PaperTradingPage() {
         {/* Right: Trade History */}
         <div className="card">
           <h2 className="text-sm font-semibold mb-3" style={{ color: "var(--muted)" }}>
-            Trade History <span className="font-normal">({trades.length})</span>
+            {t("pt_trade_hist")} <span className="font-normal">({trades.length})</span>
           </h2>
           <div style={{ maxHeight: "24rem", overflowY: "auto", display: "flex", flexDirection: "column", gap: ".25rem" }}>
             {trades.length === 0 ? (
-              <p className="text-xs" style={{ color: "var(--muted)" }}>No trades yet</p>
+              <p className="text-xs" style={{ color: "var(--muted)" }}>{t("pt_no_trades")}</p>
             ) : (
               trades.map((trade) => (
                 <div

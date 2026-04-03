@@ -11,6 +11,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { fetchStrategies, StrategyInfo } from "@/lib/api";
+import { useI18n } from "@/lib/i18n";
 
 const CATEGORY_COLORS: Record<string, string> = {
   trend: "var(--accent)",
@@ -20,6 +21,7 @@ const CATEGORY_COLORS: Record<string, string> = {
 };
 
 export default function StrategiesPage() {
+  const { t } = useI18n();
   const [strategies, setStrategies] = useState<StrategyInfo[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -33,17 +35,16 @@ export default function StrategiesPage() {
   if (loading) {
     return (
       <div className="text-center" style={{ padding: "3rem 0", color: "var(--muted)" }}>
-        Loading strategies...
+        {t("loading")}
       </div>
     );
   }
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-2">Strategy Library</h1>
+      <h1 className="text-2xl font-bold mb-2">{t("strat_title")}</h1>
       <p className="text-sm mb-6" style={{ color: "var(--muted)" }}>
-        Browse available trading strategies. Each strategy can be configured with custom parameters
-        and backtested against historical data.
+        {t("strat_desc")}
       </p>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
@@ -80,7 +81,7 @@ export default function StrategiesPage() {
             {/* Parameters */}
             <div>
               <h3 className="text-xs font-semibold mb-2" style={{ color: "var(--muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                Parameters
+                {t("strat_params")}
               </h3>
               <div style={{ display: "flex", flexDirection: "column", gap: ".375rem" }}>
                 {strategy.parameters.map((param) => (
@@ -100,7 +101,7 @@ export default function StrategiesPage() {
                         : `${param.min ?? ""}–${param.max ?? ""}`}
                       {" "}
                       <span style={{ color: "var(--accent)" }}>
-                        (default: {String(param.default)})
+                        ({t("strat_default")}: {String(param.default)})
                       </span>
                     </span>
                   </div>
@@ -113,7 +114,7 @@ export default function StrategiesPage() {
 
       {strategies.length === 0 && (
         <div className="card text-center" style={{ padding: "3rem", color: "var(--muted)" }}>
-          No strategies loaded. Make sure the backend is running.
+          {t("strat_no_load")}
         </div>
       )}
     </div>

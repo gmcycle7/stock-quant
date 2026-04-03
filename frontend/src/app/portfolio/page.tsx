@@ -7,8 +7,10 @@
 import { useEffect, useState } from "react";
 import { fetchPortfolio, PortfolioSummary } from "@/lib/api";
 import MetricCard from "@/components/MetricCard";
+import { useI18n } from "@/lib/i18n";
 
 export default function PortfolioPage() {
+  const { t } = useI18n();
   const [portfolio, setPortfolio] = useState<PortfolioSummary | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -22,7 +24,7 @@ export default function PortfolioPage() {
   if (loading) {
     return (
       <div className="text-center" style={{ padding: "3rem 0", color: "var(--muted)" }}>
-        Loading...
+        {t("loading")}
       </div>
     );
   }
@@ -30,23 +32,23 @@ export default function PortfolioPage() {
   if (!portfolio || portfolio.error) {
     return (
       <div className="card text-center" style={{ padding: "3rem", color: "var(--muted)" }}>
-        Portfolio not found. Make sure the backend is running and data has been seeded.
+        {t("pf_not_found")}
       </div>
     );
   }
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">Portfolio</h1>
+      <h1 className="text-2xl font-bold mb-6">{t("pf_title")}</h1>
 
       {/* Summary Cards */}
       <div className="grid-4 mb-6" style={{ gridTemplateColumns: "repeat(5, 1fr)" }}>
-        <MetricCard label="Total Equity" value={`$${portfolio.total_equity.toLocaleString()}`} />
-        <MetricCard label="Cash" value={`$${portfolio.cash.toLocaleString()}`} />
-        <MetricCard label="Positions Value" value={`$${portfolio.positions_value.toLocaleString()}`} />
-        <MetricCard label="Initial Capital" value={`$${portfolio.initial_capital.toLocaleString()}`} />
+        <MetricCard label={t("total_equity")} value={`$${portfolio.total_equity.toLocaleString()}`} />
+        <MetricCard label={t("cash")} value={`$${portfolio.cash.toLocaleString()}`} />
+        <MetricCard label={t("positions_val")} value={`$${portfolio.positions_value.toLocaleString()}`} />
+        <MetricCard label={t("pf_initial")} value={`$${portfolio.initial_capital.toLocaleString()}`} />
         <MetricCard
-          label="Total Return"
+          label={t("total_return")}
           value={portfolio.total_return_pct}
           suffix="%"
           positive={portfolio.total_return_pct >= 0}
@@ -56,23 +58,23 @@ export default function PortfolioPage() {
       {/* Positions Table */}
       <div className="card">
         <h2 className="text-sm font-semibold mb-3" style={{ color: "var(--muted)" }}>
-          Open Positions <span className="font-normal">({portfolio.positions.length})</span>
+          {t("pf_open_pos")} <span className="font-normal">({portfolio.positions.length})</span>
         </h2>
 
         {portfolio.positions.length === 0 ? (
-          <p className="text-sm" style={{ color: "var(--muted)" }}>No open positions</p>
+          <p className="text-sm" style={{ color: "var(--muted)" }}>{t("pt_no_pos")}</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>Symbol</th>
-                  <th style={{ textAlign: "right" }}>Shares</th>
-                  <th style={{ textAlign: "right" }}>Avg Entry</th>
-                  <th style={{ textAlign: "right" }}>Current Price</th>
-                  <th style={{ textAlign: "right" }}>Market Value</th>
-                  <th style={{ textAlign: "right" }}>Unrealized P&L</th>
-                  <th style={{ textAlign: "right" }}>P&L %</th>
+                  <th>{t("col_symbol")}</th>
+                  <th style={{ textAlign: "right" }}>{t("col_shares")}</th>
+                  <th style={{ textAlign: "right" }}>{t("col_avg_entry")}</th>
+                  <th style={{ textAlign: "right" }}>{t("col_cur_price")}</th>
+                  <th style={{ textAlign: "right" }}>{t("col_mkt_val")}</th>
+                  <th style={{ textAlign: "right" }}>{t("col_unreal_pnl")}</th>
+                  <th style={{ textAlign: "right" }}>{t("col_pnl_pct")}</th>
                 </tr>
               </thead>
               <tbody>

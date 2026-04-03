@@ -1,37 +1,39 @@
 "use client";
 
 import Link from "next/link";
-
-const FEATURES = [
-  { href: "/market", title: "Market Data Explorer", desc: "Browse stocks, view prices, and explore technical indicators", icon: "📈" },
-  { href: "/strategies", title: "Strategy Library", desc: "Browse 5 built-in strategies with configurable parameters", icon: "🧪" },
-  { href: "/backtest", title: "Strategy Backtest", desc: "Test strategies against historical data and analyze performance", icon: "⏱️" },
-  { href: "/paper-trading", title: "Paper Trading", desc: "Practice trading with simulated money — no risk", icon: "💵" },
-  { href: "/dashboard", title: "Dashboard", desc: "Overview of your watchlist, recent backtests, and portfolio", icon: "📊" },
-  { href: "/docs", title: "Documentation", desc: "Learn how every part of the system works", icon: "📖" },
-];
+import { useI18n } from "@/lib/i18n";
 
 export default function HomePage() {
+  const { t } = useI18n();
+
+  const FEATURES = [
+    { href: "/market", title: t("feat_market"), desc: t("feat_market_d"), icon: "📈" },
+    { href: "/strategies", title: t("feat_strategy"), desc: t("feat_strategy_d"), icon: "🧪" },
+    { href: "/backtest", title: t("feat_backtest"), desc: t("feat_backtest_d"), icon: "⏱️" },
+    { href: "/paper-trading", title: t("feat_paper"), desc: t("feat_paper_d"), icon: "💵" },
+    { href: "/dashboard", title: t("feat_dashboard"), desc: t("feat_dashboard_d"), icon: "📊" },
+    { href: "/docs", title: t("feat_docs"), desc: t("feat_docs_d"), icon: "📖" },
+  ];
+
   return (
     <div style={{ maxWidth: "56rem", margin: "0 auto" }}>
       {/* Hero */}
       <div style={{ textAlign: "center", padding: "3rem 0 2rem" }}>
         <h1 style={{ fontSize: "2.5rem", fontWeight: 700, color: "var(--accent)", marginBottom: ".5rem" }}>
-          StockQuant
+          {t("home_title")}
         </h1>
         <p style={{ fontSize: "1.1rem", marginBottom: ".25rem" }}>
-          Quantitative Trading Research Platform
+          {t("home_subtitle")}
         </p>
         <p style={{ fontSize: ".85rem", color: "var(--muted)" }}>
-          Learn, backtest, and paper trade quantitative strategies — safely and for free.
+          {t("home_desc")}
         </p>
       </div>
 
       {/* Risk warning */}
       <div className="card" style={{ borderColor: "var(--yellow)", background: "#1c1917", textAlign: "center", marginBottom: "2rem" }}>
         <p style={{ color: "var(--yellow)", fontSize: ".85rem" }}>
-          <strong>Important:</strong> This platform is for educational and research purposes only.
-          It is NOT financial advice. Do not make real investment decisions based solely on this system.
+          {t("home_warning")}
         </p>
       </div>
 
@@ -52,13 +54,13 @@ export default function HomePage() {
 
       {/* Quick Start */}
       <div className="card">
-        <h2 style={{ fontSize: "1.1rem", fontWeight: 700, marginBottom: ".75rem" }}>Quick Start Guide</h2>
+        <h2 style={{ fontSize: "1.1rem", fontWeight: 700, marginBottom: ".75rem" }}>{t("quick_start")}</h2>
         <ol style={{ paddingLeft: "1.25rem", fontSize: ".85rem", color: "var(--muted)", lineHeight: 2 }}>
-          <li><strong style={{ color: "var(--foreground)" }}>Explore data:</strong> Go to <Link href="/market" style={{ color: "var(--accent)" }}>Market Data</Link></li>
-          <li><strong style={{ color: "var(--foreground)" }}>Pick a strategy:</strong> Visit the <Link href="/strategies" style={{ color: "var(--accent)" }}>Strategy Library</Link></li>
-          <li><strong style={{ color: "var(--foreground)" }}>Run a backtest:</strong> Go to <Link href="/backtest" style={{ color: "var(--accent)" }}>Backtest</Link></li>
-          <li><strong style={{ color: "var(--foreground)" }}>Paper trade:</strong> Use <Link href="/paper-trading" style={{ color: "var(--accent)" }}>Paper Trading</Link></li>
-          <li><strong style={{ color: "var(--foreground)" }}>Learn:</strong> Read the <Link href="/docs" style={{ color: "var(--accent)" }}>Documentation</Link></li>
+          <li><strong style={{ color: "var(--foreground)" }}>{t("qs_1")}</strong> {t("qs_1b")} <Link href="/market" style={{ color: "var(--accent)" }}>{t("feat_market")}</Link></li>
+          <li><strong style={{ color: "var(--foreground)" }}>{t("qs_2")}</strong> {t("qs_2b")} <Link href="/strategies" style={{ color: "var(--accent)" }}>{t("feat_strategy")}</Link></li>
+          <li><strong style={{ color: "var(--foreground)" }}>{t("qs_3")}</strong> {t("qs_3b")} <Link href="/backtest" style={{ color: "var(--accent)" }}>{t("feat_backtest")}</Link></li>
+          <li><strong style={{ color: "var(--foreground)" }}>{t("qs_4")}</strong> {t("qs_4b")} <Link href="/paper-trading" style={{ color: "var(--accent)" }}>{t("feat_paper")}</Link></li>
+          <li><strong style={{ color: "var(--foreground)" }}>{t("qs_5")}</strong> {t("qs_5b")} <Link href="/docs" style={{ color: "var(--accent)" }}>{t("feat_docs")}</Link></li>
         </ol>
       </div>
     </div>

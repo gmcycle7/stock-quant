@@ -9,6 +9,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useI18n } from "@/lib/i18n";
 
 const SECTIONS = [
   {
@@ -478,14 +479,15 @@ pip install -r requirements.txt
 ];
 
 export default function DocsPage() {
+  const { t } = useI18n();
   const [activeSection, setActiveSection] = useState("overview");
   const section = SECTIONS.find((s) => s.id === activeSection) || SECTIONS[0];
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-2">Documentation</h1>
+      <h1 className="text-2xl font-bold mb-2">{t("docs_title")}</h1>
       <p className="text-sm mb-6" style={{ color: "var(--muted)" }}>
-        Learn how every part of the StockQuant system works.
+        {t("docs_desc")}
       </p>
 
       <div className="flex gap-6">

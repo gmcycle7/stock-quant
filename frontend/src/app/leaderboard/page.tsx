@@ -7,16 +7,19 @@
 
 import { useEffect, useState } from "react";
 import { fetchLeaderboard, LeaderboardEntry } from "@/lib/api";
-
-const SORT_OPTIONS = [
-  { value: "sharpe_ratio", label: "Sharpe Ratio" },
-  { value: "total_return", label: "Total Return" },
-  { value: "win_rate", label: "Win Rate" },
-  { value: "max_drawdown", label: "Max Drawdown (best)" },
-  { value: "num_trades", label: "# Trades" },
-];
+import { useI18n } from "@/lib/i18n";
 
 export default function LeaderboardPage() {
+  const { t } = useI18n();
+
+  const SORT_OPTIONS = [
+    { value: "sharpe_ratio", label: t("sharpe_ratio") },
+    { value: "total_return", label: t("total_return") },
+    { value: "win_rate", label: t("win_rate") },
+    { value: "max_drawdown", label: t("max_drawdown") },
+    { value: "num_trades", label: t("num_trades") },
+  ];
+
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
   const [sortBy, setSortBy] = useState("sharpe_ratio");
   const [loading, setLoading] = useState(true);
@@ -31,14 +34,14 @@ export default function LeaderboardPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-2">Leaderboard</h1>
+      <h1 className="text-2xl font-bold mb-2">{t("lb_title")}</h1>
       <p className="text-sm mb-5" style={{ color: "var(--muted)" }}>
-        Compare saved strategy runs. Sort by different metrics to find the best performers.
+        {t("lb_desc")}
       </p>
 
       {/* Sort Controls */}
       <div className="flex items-center flex-wrap gap-2 mb-5">
-        <span className="text-sm" style={{ color: "var(--muted)" }}>Sort by:</span>
+        <span className="text-sm" style={{ color: "var(--muted)" }}>{t("lb_sort")}:</span>
         {SORT_OPTIONS.map((opt) => (
           <button
             key={opt.value}
@@ -61,10 +64,10 @@ export default function LeaderboardPage() {
       </div>
 
       {loading ? (
-        <div className="text-center" style={{ padding: "3rem 0", color: "var(--muted)" }}>Loading...</div>
+        <div className="text-center" style={{ padding: "3rem 0", color: "var(--muted)" }}>{t("loading")}</div>
       ) : entries.length === 0 ? (
         <div className="card text-center" style={{ padding: "3rem", color: "var(--muted)" }}>
-          No entries yet. Run a backtest and save it to the leaderboard.
+          {t("lb_no_entries")}
         </div>
       ) : (
         <div className="card" style={{ padding: 0, overflow: "hidden" }}>
@@ -73,15 +76,15 @@ export default function LeaderboardPage() {
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>Name</th>
-                  <th>Strategy</th>
-                  <th>Symbol</th>
-                  <th style={{ textAlign: "right" }}>Return %</th>
-                  <th style={{ textAlign: "right" }}>Sharpe</th>
-                  <th style={{ textAlign: "right" }}>Max DD %</th>
-                  <th style={{ textAlign: "right" }}>Win Rate %</th>
-                  <th style={{ textAlign: "right" }}>Trades</th>
-                  <th>Period</th>
+                  <th>{t("col_name")}</th>
+                  <th>{t("col_strategy")}</th>
+                  <th>{t("col_symbol")}</th>
+                  <th style={{ textAlign: "right" }}>{t("col_return")}</th>
+                  <th style={{ textAlign: "right" }}>{t("col_sharpe")}</th>
+                  <th style={{ textAlign: "right" }}>{t("col_maxdd")}</th>
+                  <th style={{ textAlign: "right" }}>{t("win_rate")}</th>
+                  <th style={{ textAlign: "right" }}>{t("col_trades")}</th>
+                  <th>{t("col_period")}</th>
                 </tr>
               </thead>
               <tbody>

@@ -21,8 +21,10 @@ import {
   WatchlistItem,
 } from "@/lib/api";
 import PriceChart from "@/components/charts/PriceChart";
+import { useI18n } from "@/lib/i18n";
 
 export default function MarketPage() {
+  const { t } = useI18n();
   const [symbols, setSymbols] = useState<string[]>([]);
   const [selectedSymbol, setSelectedSymbol] = useState("AAPL");
   const [searchInput, setSearchInput] = useState("");
@@ -130,7 +132,7 @@ export default function MarketPage() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">Market Data Explorer</h1>
+      <h1 className="text-2xl font-bold mb-6">{t("mkt_title")}</h1>
 
       {/* Controls */}
       <div className="flex flex-wrap items-center gap-3 mb-4">
@@ -141,7 +143,7 @@ export default function MarketPage() {
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value.toUpperCase())}
             onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-            placeholder="Enter symbol (e.g., AAPL)"
+            placeholder={t("mkt_search_ph")}
             className="input-field"
             style={{ width: "12rem" }}
           />
@@ -164,10 +166,10 @@ export default function MarketPage() {
 
         {/* Actions */}
         <button onClick={handleRefresh} disabled={refreshing} className="btn-secondary text-sm">
-          {refreshing ? "Refreshing..." : "Refresh Data"}
+          {refreshing ? t("mkt_refreshing") : t("mkt_refresh")}
         </button>
         <button onClick={toggleWatchlist} className="btn-secondary text-sm">
-          {isInWatchlist ? "- Remove from Watchlist" : "+ Add to Watchlist"}
+          {isInWatchlist ? t("mkt_rm_wl") : t("mkt_add_wl")}
         </button>
 
         {/* Indicator toggles */}
@@ -188,7 +190,7 @@ export default function MarketPage() {
       {/* Price Chart */}
       <div className="card mb-4">
         <h2 className="text-sm font-semibold mb-3" style={{ color: "var(--muted)" }}>
-          {selectedSymbol} — Price Chart {loading && <span style={{ color: "var(--accent)" }}>(Loading...)</span>}
+          {selectedSymbol} — {t("mkt_price_chart")} {loading && <span style={{ color: "var(--accent)" }}>({t("mkt_loading")})</span>}
         </h2>
         <PriceChart
           data={chartData as { date: string; close: number }[]}
@@ -201,19 +203,19 @@ export default function MarketPage() {
       {/* Price Table (last 20 rows) */}
       <div className="card">
         <h2 className="text-sm font-semibold mb-3" style={{ color: "var(--muted)" }}>
-          Recent Prices
-          <span className="font-normal ml-1">({chartData.length} total data points)</span>
+          {t("mkt_recent")}
+          <span className="font-normal ml-1">({chartData.length} {t("mkt_total_pts")})</span>
         </h2>
         <div className="overflow-x-auto" style={{ maxHeight: "20rem", overflowY: "auto" }}>
           <table className="data-table">
             <thead style={{ position: "sticky", top: 0, background: "var(--card-bg)" }}>
               <tr>
-                <th>Date</th>
-                <th style={{ textAlign: "right" }}>Open</th>
-                <th style={{ textAlign: "right" }}>High</th>
-                <th style={{ textAlign: "right" }}>Low</th>
-                <th style={{ textAlign: "right" }}>Close</th>
-                <th style={{ textAlign: "right" }}>Volume</th>
+                <th>{t("col_date")}</th>
+                <th style={{ textAlign: "right" }}>{t("col_open")}</th>
+                <th style={{ textAlign: "right" }}>{t("col_high")}</th>
+                <th style={{ textAlign: "right" }}>{t("col_low")}</th>
+                <th style={{ textAlign: "right" }}>{t("col_close")}</th>
+                <th style={{ textAlign: "right" }}>{t("col_volume")}</th>
               </tr>
             </thead>
             <tbody>

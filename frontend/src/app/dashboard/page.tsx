@@ -7,8 +7,10 @@ import {
   WatchlistItem, BacktestHistoryItem, PortfolioSummary,
 } from "@/lib/api";
 import MetricCard from "@/components/MetricCard";
+import { useI18n } from "@/lib/i18n";
 
 export default function DashboardPage() {
+  const { t } = useI18n();
   const [watchlist, setWatchlist] = useState<WatchlistItem[]>([]);
   const [backtests, setBacktests] = useState<BacktestHistoryItem[]>([]);
   const [portfolio, setPortfolio] = useState<PortfolioSummary | null>(null);
@@ -32,27 +34,27 @@ export default function DashboardPage() {
     })();
   }, []);
 
-  if (loading) return <p style={{ textAlign: "center", padding: "3rem 0", color: "var(--muted)" }}>Loading dashboard...</p>;
+  if (loading) return <p style={{ textAlign: "center", padding: "3rem 0", color: "var(--muted)" }}>{t("loading")}</p>;
 
   return (
     <div>
-      <h1 style={{ fontSize: "1.5rem", fontWeight: 700, marginBottom: "1rem" }}>Dashboard</h1>
+      <h1 style={{ fontSize: "1.5rem", fontWeight: 700, marginBottom: "1rem" }}>{t("dash_title")}</h1>
 
       {demoMode && (
         <div style={{ background: "#1e3a5f", color: "#93c5fd", border: "1px solid #2563eb", borderRadius: ".5rem", padding: ".6rem 1rem", marginBottom: "1rem", fontSize: ".8rem" }}>
-          <strong>Demo Mode</strong> — Using built-in sample data. Connect a backend for full functionality.
+          {t("demo_banner")}
         </div>
       )}
 
       {/* Portfolio Summary */}
       {portfolio && !portfolio.error && (
         <div style={{ marginBottom: "1.5rem" }}>
-          <h2 style={{ fontSize: ".8rem", fontWeight: 600, color: "var(--muted)", marginBottom: ".5rem", textTransform: "uppercase", letterSpacing: ".05em" }}>Paper Portfolio</h2>
+          <h2 style={{ fontSize: ".8rem", fontWeight: 600, color: "var(--muted)", marginBottom: ".5rem", textTransform: "uppercase", letterSpacing: ".05em" }}>{t("paper_portfolio")}</h2>
           <div className="grid-4">
-            <MetricCard label="Total Equity" value={`$${portfolio.total_equity.toLocaleString()}`} />
-            <MetricCard label="Cash" value={`$${portfolio.cash.toLocaleString()}`} />
-            <MetricCard label="Positions" value={`$${portfolio.positions_value.toLocaleString()}`} />
-            <MetricCard label="Total Return" value={portfolio.total_return_pct} suffix="%" positive={portfolio.total_return_pct >= 0} />
+            <MetricCard label={t("total_equity")} value={`$${portfolio.total_equity.toLocaleString()}`} />
+            <MetricCard label={t("cash")} value={`$${portfolio.cash.toLocaleString()}`} />
+            <MetricCard label={t("positions_val")} value={`$${portfolio.positions_value.toLocaleString()}`} />
+            <MetricCard label={t("total_return")} value={portfolio.total_return_pct} suffix="%" positive={portfolio.total_return_pct >= 0} />
           </div>
         </div>
       )}
@@ -60,12 +62,12 @@ export default function DashboardPage() {
       {/* Watchlist */}
       <div style={{ marginBottom: "1.5rem" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: ".5rem" }}>
-          <h2 style={{ fontSize: ".8rem", fontWeight: 600, color: "var(--muted)", textTransform: "uppercase", letterSpacing: ".05em" }}>Watchlist</h2>
-          <Link href="/market" style={{ fontSize: ".75rem", color: "var(--accent)" }}>Manage</Link>
+          <h2 style={{ fontSize: ".8rem", fontWeight: 600, color: "var(--muted)", textTransform: "uppercase", letterSpacing: ".05em" }}>{t("watchlist")}</h2>
+          <Link href="/market" style={{ fontSize: ".75rem", color: "var(--accent)" }}>{t("manage")}</Link>
         </div>
         {watchlist.length === 0 ? (
           <div className="card" style={{ fontSize: ".85rem", color: "var(--muted)" }}>
-            No symbols in watchlist. <Link href="/market" style={{ color: "var(--accent)" }}>Add some</Link>
+            {t("no_watchlist")} <Link href="/market" style={{ color: "var(--accent)" }}>{t("add_some")}</Link>
           </div>
         ) : (
           <div className="grid-4">
@@ -92,21 +94,21 @@ export default function DashboardPage() {
       {/* Recent Backtests */}
       <div>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: ".5rem" }}>
-          <h2 style={{ fontSize: ".8rem", fontWeight: 600, color: "var(--muted)", textTransform: "uppercase", letterSpacing: ".05em" }}>Recent Backtests</h2>
-          <Link href="/backtest" style={{ fontSize: ".75rem", color: "var(--accent)" }}>Run New</Link>
+          <h2 style={{ fontSize: ".8rem", fontWeight: 600, color: "var(--muted)", textTransform: "uppercase", letterSpacing: ".05em" }}>{t("recent_bt")}</h2>
+          <Link href="/backtest" style={{ fontSize: ".75rem", color: "var(--accent)" }}>{t("run_new")}</Link>
         </div>
         {backtests.length === 0 ? (
           <div className="card" style={{ fontSize: ".85rem", color: "var(--muted)" }}>
-            No backtests yet. <Link href="/backtest" style={{ color: "var(--accent)" }}>Run your first backtest</Link>
+            {t("no_bt")} <Link href="/backtest" style={{ color: "var(--accent)" }}>{t("run_first")}</Link>
           </div>
         ) : (
           <div className="card" style={{ padding: 0, overflow: "auto" }}>
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>Strategy</th><th>Symbol</th><th style={{ textAlign: "right" }}>Return</th>
-                  <th style={{ textAlign: "right" }}>Sharpe</th><th style={{ textAlign: "right" }}>Max DD</th>
-                  <th style={{ textAlign: "right" }}>Trades</th>
+                  <th>{t("col_strategy")}</th><th>{t("col_symbol")}</th><th style={{ textAlign: "right" }}>{t("col_return")}</th>
+                  <th style={{ textAlign: "right" }}>{t("col_sharpe")}</th><th style={{ textAlign: "right" }}>{t("col_maxdd")}</th>
+                  <th style={{ textAlign: "right" }}>{t("col_trades")}</th>
                 </tr>
               </thead>
               <tbody>
