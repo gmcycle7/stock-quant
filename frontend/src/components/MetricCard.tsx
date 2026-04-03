@@ -1,37 +1,28 @@
 "use client";
 
-/**
- * Metric Card — displays a single metric with label, value, and optional color coding.
- * Used throughout the dashboard and backtest results.
- */
-
 interface Props {
   label: string;
   value: string | number;
   suffix?: string;
-  positive?: boolean | null; // true=green, false=red, null=neutral
-  description?: string;
+  positive?: boolean | null;
 }
 
-export default function MetricCard({ label, value, suffix = "", positive = null, description }: Props) {
-  let colorStyle = "var(--foreground)";
-  if (positive === true) colorStyle = "var(--green)";
-  if (positive === false) colorStyle = "var(--red)";
+export default function MetricCard({ label, value, suffix = "", positive = null }: Props) {
+  let color = "var(--foreground)";
+  if (positive === true) color = "var(--green)";
+  if (positive === false) color = "var(--red)";
+
+  const display = typeof value === "number"
+    ? value.toLocaleString(undefined, { maximumFractionDigits: 2 })
+    : value;
 
   return (
-    <div className="card">
-      <p className="text-xs mb-1" style={{ color: "var(--muted)" }}>
-        {label}
-      </p>
-      <p className="text-xl font-bold" style={{ color: colorStyle }}>
-        {typeof value === "number" ? value.toLocaleString(undefined, { maximumFractionDigits: 2 }) : value}
-        {suffix && <span className="text-sm font-normal ml-1">{suffix}</span>}
-      </p>
-      {description && (
-        <p className="text-xs mt-1" style={{ color: "var(--muted)" }}>
-          {description}
-        </p>
-      )}
+    <div className="metric-card">
+      <div className="label">{label}</div>
+      <div className="value" style={{ color }}>
+        {display}
+        {suffix && <span style={{ fontSize: ".75rem", fontWeight: 400, marginLeft: ".25rem" }}>{suffix}</span>}
+      </div>
     </div>
   );
 }

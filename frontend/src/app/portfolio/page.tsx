@@ -19,11 +19,17 @@ export default function PortfolioPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <div className="text-center py-12" style={{ color: "var(--muted)" }}>Loading...</div>;
+  if (loading) {
+    return (
+      <div className="text-center" style={{ padding: "3rem 0", color: "var(--muted)" }}>
+        Loading...
+      </div>
+    );
+  }
 
   if (!portfolio || portfolio.error) {
     return (
-      <div className="card text-center py-12" style={{ color: "var(--muted)" }}>
+      <div className="card text-center" style={{ padding: "3rem", color: "var(--muted)" }}>
         Portfolio not found. Make sure the backend is running and data has been seeded.
       </div>
     );
@@ -34,7 +40,7 @@ export default function PortfolioPage() {
       <h1 className="text-2xl font-bold mb-6">Portfolio</h1>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-6">
+      <div className="grid-4 mb-6" style={{ gridTemplateColumns: "repeat(5, 1fr)" }}>
         <MetricCard label="Total Equity" value={`$${portfolio.total_equity.toLocaleString()}`} />
         <MetricCard label="Cash" value={`$${portfolio.cash.toLocaleString()}`} />
         <MetricCard label="Positions Value" value={`$${portfolio.positions_value.toLocaleString()}`} />
@@ -50,37 +56,49 @@ export default function PortfolioPage() {
       {/* Positions Table */}
       <div className="card">
         <h2 className="text-sm font-semibold mb-3" style={{ color: "var(--muted)" }}>
-          Open Positions ({portfolio.positions.length})
+          Open Positions <span className="font-normal">({portfolio.positions.length})</span>
         </h2>
 
         {portfolio.positions.length === 0 ? (
           <p className="text-sm" style={{ color: "var(--muted)" }}>No open positions</p>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
+            <table className="data-table">
               <thead>
-                <tr style={{ color: "var(--muted)" }}>
-                  <th className="text-left py-2 px-3">Symbol</th>
-                  <th className="text-right py-2 px-3">Shares</th>
-                  <th className="text-right py-2 px-3">Avg Entry</th>
-                  <th className="text-right py-2 px-3">Current Price</th>
-                  <th className="text-right py-2 px-3">Market Value</th>
-                  <th className="text-right py-2 px-3">Unrealized P&L</th>
-                  <th className="text-right py-2 px-3">P&L %</th>
+                <tr>
+                  <th>Symbol</th>
+                  <th style={{ textAlign: "right" }}>Shares</th>
+                  <th style={{ textAlign: "right" }}>Avg Entry</th>
+                  <th style={{ textAlign: "right" }}>Current Price</th>
+                  <th style={{ textAlign: "right" }}>Market Value</th>
+                  <th style={{ textAlign: "right" }}>Unrealized P&L</th>
+                  <th style={{ textAlign: "right" }}>P&L %</th>
                 </tr>
               </thead>
               <tbody>
                 {portfolio.positions.map((pos) => (
-                  <tr key={pos.id} className="border-b" style={{ borderColor: "var(--card-border)" }}>
-                    <td className="py-2 px-3 font-bold">{pos.symbol}</td>
-                    <td className="py-2 px-3 text-right">{pos.shares}</td>
-                    <td className="py-2 px-3 text-right">${pos.avg_entry_price.toFixed(2)}</td>
-                    <td className="py-2 px-3 text-right">${pos.current_price.toFixed(2)}</td>
-                    <td className="py-2 px-3 text-right">${pos.market_value.toLocaleString()}</td>
-                    <td className="py-2 px-3 text-right" style={{ color: pos.unrealized_pnl >= 0 ? "var(--green)" : "var(--red)" }}>
+                  <tr key={pos.id}>
+                    <td style={{ fontWeight: 700 }}>{pos.symbol}</td>
+                    <td style={{ textAlign: "right" }}>{pos.shares}</td>
+                    <td style={{ textAlign: "right" }}>${pos.avg_entry_price.toFixed(2)}</td>
+                    <td style={{ textAlign: "right" }}>${pos.current_price.toFixed(2)}</td>
+                    <td style={{ textAlign: "right" }}>${pos.market_value.toLocaleString()}</td>
+                    <td
+                      style={{
+                        textAlign: "right",
+                        color: pos.unrealized_pnl >= 0 ? "var(--green)" : "var(--red)",
+                        fontWeight: 600,
+                      }}
+                    >
                       {pos.unrealized_pnl >= 0 ? "+" : ""}${pos.unrealized_pnl.toFixed(2)}
                     </td>
-                    <td className="py-2 px-3 text-right" style={{ color: pos.unrealized_pnl_pct >= 0 ? "var(--green)" : "var(--red)" }}>
+                    <td
+                      style={{
+                        textAlign: "right",
+                        color: pos.unrealized_pnl_pct >= 0 ? "var(--green)" : "var(--red)",
+                        fontWeight: 600,
+                      }}
+                    >
                       {pos.unrealized_pnl_pct >= 0 ? "+" : ""}{pos.unrealized_pnl_pct.toFixed(2)}%
                     </td>
                   </tr>

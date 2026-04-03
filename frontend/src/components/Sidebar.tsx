@@ -1,12 +1,5 @@
 "use client";
 
-/**
- * Sidebar Navigation Component.
- *
- * This is the main navigation panel on the left side of every page.
- * It provides links to all major sections of the application.
- */
-
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -23,65 +16,64 @@ const NAV_ITEMS = [
   { href: "/settings", label: "Settings", icon: "⚙️" },
 ];
 
-export default function Sidebar() {
+interface Props {
+  open: boolean;
+  onClose: () => void;
+}
+
+export default function Sidebar({ open, onClose }: Props) {
   const pathname = usePathname();
 
   return (
-    <aside
-      className="fixed left-0 top-0 h-full w-56 flex flex-col border-r"
-      style={{
-        background: "var(--sidebar-bg)",
-        borderColor: "var(--sidebar-border)",
-      }}
-    >
-      {/* Logo / Brand */}
-      <div className="p-4 border-b" style={{ borderColor: "var(--card-border)" }}>
-        <Link href="/" className="flex items-center gap-2">
-          <span className="text-xl font-bold" style={{ color: "var(--accent)" }}>
-            StockQuant
-          </span>
-        </Link>
-        <p className="text-xs mt-1" style={{ color: "var(--muted)" }}>
-          Quant Research Platform
-        </p>
-      </div>
-
-      {/* Navigation Links */}
-      <nav className="flex-1 overflow-y-auto py-2">
-        {NAV_ITEMS.map((item) => {
-          const isActive =
-            item.href === "/"
-              ? pathname === "/"
-              : pathname.startsWith(item.href);
-
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="flex items-center gap-3 px-4 py-2.5 text-sm transition-colors"
-              style={{
-                background: isActive ? "var(--card-bg)" : "transparent",
-                color: isActive ? "var(--accent)" : "var(--muted)",
-                borderRight: isActive ? "2px solid var(--accent)" : "2px solid transparent",
-              }}
-            >
-              <span>{item.icon}</span>
-              <span>{item.label}</span>
-            </Link>
-          );
-        })}
-      </nav>
-
-      {/* Disclaimer Footer */}
+    <>
+      {/* Overlay for mobile */}
       <div
-        className="p-3 text-xs border-t"
-        style={{ borderColor: "var(--card-border)", color: "var(--muted)" }}
-      >
-        <p className="font-semibold" style={{ color: "var(--yellow)" }}>
-          For Education Only
-        </p>
-        <p className="mt-1">Not financial advice. Use at your own risk.</p>
-      </div>
-    </aside>
+        className={`sidebar-overlay ${open ? "open" : ""}`}
+        onClick={onClose}
+      />
+
+      <aside className={`sidebar ${open ? "open" : ""}`}>
+        {/* Brand */}
+        <div style={{ padding: "1.25rem 1rem", borderBottom: `1px solid var(--card-border)` }}>
+          <Link href="/" onClick={onClose} style={{ textDecoration: "none" }}>
+            <span style={{ fontSize: "1.25rem", fontWeight: 700, color: "var(--accent)" }}>
+              StockQuant
+            </span>
+          </Link>
+          <p style={{ fontSize: ".7rem", color: "var(--muted)", marginTop: ".25rem" }}>
+            Quant Research Platform
+          </p>
+        </div>
+
+        {/* Nav */}
+        <nav style={{ flex: 1, overflowY: "auto", padding: ".5rem 0" }}>
+          {NAV_ITEMS.map((item) => {
+            const isActive =
+              item.href === "/"
+                ? pathname === "/" || pathname === ""
+                : pathname.startsWith(item.href);
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={onClose}
+                className={`nav-link ${isActive ? "active" : ""}`}
+              >
+                <span>{item.icon}</span>
+                <span>{item.label}</span>
+              </Link>
+            );
+          })}
+        </nav>
+
+        {/* Footer */}
+        <div style={{ padding: ".75rem 1rem", borderTop: `1px solid var(--card-border)`, fontSize: ".7rem", color: "var(--muted)" }}>
+          <p style={{ color: "var(--yellow)", fontWeight: 600, marginBottom: ".2rem" }}>
+            For Education Only
+          </p>
+          <p>Not financial advice.</p>
+        </div>
+      </aside>
+    </>
   );
 }

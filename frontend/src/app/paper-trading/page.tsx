@@ -94,7 +94,13 @@ export default function PaperTradingPage() {
     }
   };
 
-  if (loading) return <div className="text-center py-12" style={{ color: "var(--muted)" }}>Loading...</div>;
+  if (loading) {
+    return (
+      <div className="text-center" style={{ padding: "3rem 0", color: "var(--muted)" }}>
+        Loading...
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -104,16 +110,25 @@ export default function PaperTradingPage() {
       </div>
 
       {/* Disclaimer */}
-      <div className="text-xs mb-4 p-2 rounded" style={{ background: "#1c1917", color: "var(--yellow)" }}>
+      <div
+        className="text-xs mb-4"
+        style={{
+          background: "rgba(234, 179, 8, 0.1)",
+          border: "1px solid var(--yellow)",
+          color: "var(--yellow)",
+          padding: ".625rem 1rem",
+          borderRadius: ".5rem",
+        }}
+      >
         This is simulated trading with fake money. No real orders are placed.
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left: Order Entry + Portfolio Summary */}
-        <div className="space-y-4">
+        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
           {/* Portfolio Summary */}
           {portfolio && !portfolio.error && (
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid-2">
               <MetricCard label="Total Equity" value={`$${portfolio.total_equity.toLocaleString()}`} />
               <MetricCard label="Cash" value={`$${portfolio.cash.toLocaleString()}`} />
               <MetricCard label="Positions" value={`$${portfolio.positions_value.toLocaleString()}`} />
@@ -126,28 +141,42 @@ export default function PaperTradingPage() {
             <h2 className="text-sm font-semibold mb-3" style={{ color: "var(--muted)" }}>Place Order</h2>
 
             <label className="text-xs block mb-1" style={{ color: "var(--muted)" }}>Symbol</label>
-            <select value={orderSymbol} onChange={(e) => setOrderSymbol(e.target.value)} className="select-field mb-2">
+            <select value={orderSymbol} onChange={(e) => setOrderSymbol(e.target.value)} className="select-field mb-3">
               {symbols.map((s) => <option key={s} value={s}>{s}</option>)}
             </select>
 
             <label className="text-xs block mb-1" style={{ color: "var(--muted)" }}>Side</label>
-            <div className="flex gap-2 mb-2">
+            <div className="flex gap-2 mb-3">
               <button
                 onClick={() => setOrderSide("buy")}
-                className="flex-1 py-2 rounded text-sm font-bold"
                 style={{
+                  flex: 1,
+                  padding: ".5rem",
+                  borderRadius: ".5rem",
+                  border: "none",
+                  fontWeight: 700,
+                  fontSize: ".875rem",
+                  cursor: "pointer",
                   background: orderSide === "buy" ? "var(--green)" : "var(--card-border)",
                   color: "white",
+                  transition: "background .15s",
                 }}
               >
                 BUY
               </button>
               <button
                 onClick={() => setOrderSide("sell")}
-                className="flex-1 py-2 rounded text-sm font-bold"
                 style={{
+                  flex: 1,
+                  padding: ".5rem",
+                  borderRadius: ".5rem",
+                  border: "none",
+                  fontWeight: 700,
+                  fontSize: ".875rem",
+                  cursor: "pointer",
                   background: orderSide === "sell" ? "var(--red)" : "var(--card-border)",
                   color: "white",
+                  transition: "background .15s",
                 }}
               >
                 SELL
@@ -163,7 +192,7 @@ export default function PaperTradingPage() {
               className="input-field mb-3"
             />
 
-            <button onClick={handlePlaceOrder} disabled={orderLoading} className="btn-primary w-full">
+            <button onClick={handlePlaceOrder} disabled={orderLoading} className="btn-primary" style={{ width: "100%" }}>
               {orderLoading ? "Placing..." : `${orderSide.toUpperCase()} ${orderQuantity} ${orderSymbol}`}
             </button>
 
@@ -176,25 +205,39 @@ export default function PaperTradingPage() {
         {/* Middle: Positions */}
         <div className="card">
           <h2 className="text-sm font-semibold mb-3" style={{ color: "var(--muted)" }}>
-            Open Positions ({portfolio?.positions.length || 0})
+            Open Positions <span className="font-normal">({portfolio?.positions.length || 0})</span>
           </h2>
           {(!portfolio?.positions || portfolio.positions.length === 0) ? (
             <p className="text-xs" style={{ color: "var(--muted)" }}>No open positions</p>
           ) : (
-            <div className="space-y-2">
+            <div style={{ display: "flex", flexDirection: "column", gap: ".5rem" }}>
               {portfolio.positions.map((pos) => (
-                <div key={pos.id} className="p-2 rounded" style={{ background: "var(--background)" }}>
-                  <div className="flex justify-between items-center">
+                <div
+                  key={pos.id}
+                  style={{
+                    background: "var(--background)",
+                    borderRadius: ".5rem",
+                    padding: ".625rem .75rem",
+                    border: "1px solid var(--card-border)",
+                  }}
+                >
+                  <div className="flex justify-between items-center mb-1">
                     <span className="font-bold text-sm">{pos.symbol}</span>
-                    <span className="text-xs" style={{ color: pos.unrealized_pnl >= 0 ? "var(--green)" : "var(--red)" }}>
+                    <span
+                      className="text-sm font-semibold"
+                      style={{ color: pos.unrealized_pnl >= 0 ? "var(--green)" : "var(--red)" }}
+                    >
                       {pos.unrealized_pnl >= 0 ? "+" : ""}${pos.unrealized_pnl.toFixed(2)}
                     </span>
                   </div>
-                  <div className="flex justify-between text-xs mt-1" style={{ color: "var(--muted)" }}>
+                  <div className="flex justify-between text-xs" style={{ color: "var(--muted)" }}>
                     <span>{pos.shares} shares @ ${pos.avg_entry_price.toFixed(2)}</span>
                     <span>${pos.market_value.toFixed(0)}</span>
                   </div>
-                  <div className="text-xs mt-1" style={{ color: pos.unrealized_pnl_pct >= 0 ? "var(--green)" : "var(--red)" }}>
+                  <div
+                    className="text-xs mt-1 font-semibold"
+                    style={{ color: pos.unrealized_pnl_pct >= 0 ? "var(--green)" : "var(--red)" }}
+                  >
                     {pos.unrealized_pnl_pct >= 0 ? "+" : ""}{pos.unrealized_pnl_pct.toFixed(2)}%
                   </div>
                 </div>
@@ -206,22 +249,31 @@ export default function PaperTradingPage() {
         {/* Right: Trade History */}
         <div className="card">
           <h2 className="text-sm font-semibold mb-3" style={{ color: "var(--muted)" }}>
-            Trade History ({trades.length})
+            Trade History <span className="font-normal">({trades.length})</span>
           </h2>
-          <div className="max-h-96 overflow-y-auto space-y-1">
+          <div style={{ maxHeight: "24rem", overflowY: "auto", display: "flex", flexDirection: "column", gap: ".25rem" }}>
             {trades.length === 0 ? (
               <p className="text-xs" style={{ color: "var(--muted)" }}>No trades yet</p>
             ) : (
               trades.map((trade) => (
-                <div key={trade.id} className="flex justify-between items-center text-xs p-1 border-b" style={{ borderColor: "var(--card-border)" }}>
+                <div
+                  key={trade.id}
+                  className="flex justify-between items-center text-xs"
+                  style={{
+                    padding: ".375rem .25rem",
+                    borderBottom: "1px solid var(--card-border)",
+                  }}
+                >
                   <div>
-                    <span style={{ color: trade.side === "buy" ? "var(--green)" : "var(--red)" }}>
+                    <span style={{ color: trade.side === "buy" ? "var(--green)" : "var(--red)", fontWeight: 700 }}>
                       {trade.side.toUpperCase()}
                     </span>
-                    <span className="ml-1">{trade.shares} {trade.symbol}</span>
+                    <span className="ml-1" style={{ color: "var(--foreground)" }}>
+                      {trade.shares} {trade.symbol}
+                    </span>
                   </div>
                   <div className="text-right">
-                    <div>${trade.price.toFixed(2)}</div>
+                    <div style={{ color: "var(--foreground)" }}>${trade.price.toFixed(2)}</div>
                     {trade.pnl !== null && (
                       <div style={{ color: trade.pnl >= 0 ? "var(--green)" : "var(--red)" }}>
                         {trade.pnl >= 0 ? "+" : ""}${trade.pnl.toFixed(2)}

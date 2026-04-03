@@ -1,5 +1,15 @@
 @import "tailwindcss";
 
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* ============================
+   Design Tokens
+   ============================ */
 :root {
   --background: #0f172a;
   --foreground: #e2e8f0;
@@ -11,103 +21,282 @@
   --red: #ef4444;
   --yellow: #eab308;
   --muted: #94a3b8;
-  --sidebar-bg: #0f172a;
-  --sidebar-border: #1e293b;
+  --sidebar-w: 14rem;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
+/* ============================
+   Base
+   ============================ */
+html { height: 100%; }
 body {
+  min-height: 100%;
+  margin: 0;
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans, system-ui, -apple-system, sans-serif);
 }
 
-/* Scrollbar styling */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-::-webkit-scrollbar-track {
+/* ============================
+   Layout Shell
+   ============================ */
+.app-shell { display: flex; min-height: 100vh; }
+
+/* Sidebar */
+.sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: var(--sidebar-w);
   background: var(--background);
-}
-::-webkit-scrollbar-thumb {
-  background: var(--card-border);
-  border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: var(--muted);
+  border-right: 1px solid var(--card-border);
+  display: flex;
+  flex-direction: column;
+  z-index: 40;
+  overflow-y: auto;
+  transition: transform .25s ease;
 }
 
-/* Custom utility classes */
+/* Main */
+.main-content {
+  flex: 1;
+  margin-left: var(--sidebar-w);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.main-inner {
+  flex: 1;
+  padding: 1.5rem;
+  overflow-x: hidden;
+}
+
+/* Mobile overlay */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.55);
+  z-index: 35;
+}
+
+/* Mobile hamburger */
+.mobile-header {
+  display: none;
+  align-items: center;
+  gap: .75rem;
+  padding: .75rem 1rem;
+  background: var(--background);
+  border-bottom: 1px solid var(--card-border);
+  position: sticky;
+  top: 0;
+  z-index: 30;
+}
+.hamburger {
+  background: none;
+  border: none;
+  color: var(--foreground);
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: .25rem;
+  line-height: 1;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 768px) {
+  .sidebar { transform: translateX(-100%); }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-overlay.open { display: block; }
+  .main-content { margin-left: 0; }
+  .mobile-header { display: flex; }
+  .main-inner { padding: 1rem; }
+}
+
+/* ============================
+   Sidebar Nav Items
+   ============================ */
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  padding: .6rem 1rem;
+  font-size: .875rem;
+  color: var(--muted);
+  text-decoration: none;
+  border-left: 3px solid transparent;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.nav-link:hover {
+  background: var(--card-bg);
+  color: var(--foreground);
+}
+.nav-link.active {
+  background: var(--card-bg);
+  color: var(--accent);
+  border-left-color: var(--accent);
+}
+
+/* ============================
+   Reusable Components
+   ============================ */
 .card {
   background: var(--card-bg);
   border: 1px solid var(--card-border);
-  border-radius: 0.75rem;
-  padding: 1.5rem;
+  border-radius: .75rem;
+  padding: 1.25rem;
 }
 
 .btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: var(--accent);
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  font-weight: 500;
+  color: #fff;
+  padding: .5rem 1rem;
+  border-radius: .5rem;
+  border: none;
+  font-weight: 600;
+  font-size: .875rem;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background .15s;
 }
-.btn-primary:hover {
-  background: var(--accent-hover);
-}
-.btn-primary:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
+.btn-primary:hover { background: var(--accent-hover); }
+.btn-primary:disabled { opacity: .45; cursor: not-allowed; }
 
 .btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: var(--card-border);
   color: var(--foreground);
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
+  padding: .5rem 1rem;
+  border-radius: .5rem;
+  border: none;
   font-weight: 500;
+  font-size: .875rem;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background .15s;
 }
-.btn-secondary:hover {
-  background: var(--muted);
-}
+.btn-secondary:hover { background: var(--muted); color: var(--background); }
 
 .input-field {
   background: var(--background);
   border: 1px solid var(--card-border);
   color: var(--foreground);
-  padding: 0.5rem 0.75rem;
-  border-radius: 0.5rem;
+  padding: .5rem .75rem;
+  border-radius: .5rem;
   width: 100%;
   outline: none;
-  transition: border-color 0.2s;
+  font-size: .875rem;
+  transition: border-color .2s;
 }
-.input-field:focus {
-  border-color: var(--accent);
-}
+.input-field:focus { border-color: var(--accent); }
 
 .select-field {
   background: var(--background);
   border: 1px solid var(--card-border);
   color: var(--foreground);
-  padding: 0.5rem 0.75rem;
-  border-radius: 0.5rem;
+  padding: .5rem .75rem;
+  border-radius: .5rem;
   width: 100%;
   outline: none;
+  font-size: .875rem;
 }
 
-.text-green { color: var(--green); }
-.text-red { color: var(--red); }
+/* ============================
+   Color Utilities
+   ============================ */
+.text-green  { color: var(--green); }
+.text-red    { color: var(--red); }
 .text-yellow { color: var(--yellow); }
-.text-muted { color: var(--muted); }
+.text-muted  { color: var(--muted); }
 .text-accent { color: var(--accent); }
+
+/* ============================
+   Disclaimer Banner
+   ============================ */
+.disclaimer-banner {
+  background: #78350f;
+  color: #fef3c7;
+  padding: .5rem 1rem;
+  font-size: .8rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+}
+.disclaimer-banner button {
+  background: rgba(255,255,255,.15);
+  border: none;
+  color: inherit;
+  padding: .2rem .6rem;
+  border-radius: .25rem;
+  cursor: pointer;
+  font-size: .75rem;
+  white-space: nowrap;
+}
+
+/* ============================
+   Scrollbar
+   ============================ */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+
+/* ============================
+   Table
+   ============================ */
+.data-table {
+  width: 100%;
+  font-size: .8rem;
+  border-collapse: collapse;
+}
+.data-table th {
+  text-align: left;
+  padding: .5rem .6rem;
+  color: var(--muted);
+  font-weight: 600;
+  border-bottom: 1px solid var(--card-border);
+  white-space: nowrap;
+}
+.data-table td {
+  padding: .45rem .6rem;
+  border-bottom: 1px solid var(--card-border);
+  white-space: nowrap;
+}
+.data-table tr:hover td {
+  background: rgba(255,255,255,.02);
+}
+
+/* ============================
+   Metric Card
+   ============================ */
+.metric-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: .75rem;
+  padding: .85rem 1rem;
+}
+.metric-card .label {
+  font-size: .7rem;
+  color: var(--muted);
+  margin-bottom: .25rem;
+  text-transform: uppercase;
+  letter-spacing: .03em;
+}
+.metric-card .value {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+/* ============================
+   Grid helpers
+   ============================ */
+.grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: .75rem; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: .75rem; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: .75rem; }
+@media (max-width: 768px) {
+  .grid-3, .grid-4 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 480px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+}

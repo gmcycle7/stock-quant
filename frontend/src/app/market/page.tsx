@@ -142,7 +142,8 @@ export default function MarketPage() {
             onChange={(e) => setSearchInput(e.target.value.toUpperCase())}
             onKeyDown={(e) => e.key === "Enter" && handleSearch()}
             placeholder="Enter symbol (e.g., AAPL)"
-            className="input-field w-48"
+            className="input-field"
+            style={{ width: "12rem" }}
           />
           <button onClick={handleSearch} className="btn-primary text-sm">
             Go
@@ -153,7 +154,8 @@ export default function MarketPage() {
         <select
           value={selectedSymbol}
           onChange={(e) => setSelectedSymbol(e.target.value)}
-          className="select-field w-32"
+          className="select-field"
+          style={{ width: "8rem" }}
         >
           {symbols.map((s) => (
             <option key={s} value={s}>{s}</option>
@@ -185,8 +187,8 @@ export default function MarketPage() {
 
       {/* Price Chart */}
       <div className="card mb-4">
-        <h2 className="text-sm font-semibold mb-2" style={{ color: "var(--muted)" }}>
-          {selectedSymbol} — Price Chart {loading && "(Loading...)"}
+        <h2 className="text-sm font-semibold mb-3" style={{ color: "var(--muted)" }}>
+          {selectedSymbol} — Price Chart {loading && <span style={{ color: "var(--accent)" }}>(Loading...)</span>}
         </h2>
         <PriceChart
           data={chartData as { date: string; close: number }[]}
@@ -198,30 +200,31 @@ export default function MarketPage() {
 
       {/* Price Table (last 20 rows) */}
       <div className="card">
-        <h2 className="text-sm font-semibold mb-2" style={{ color: "var(--muted)" }}>
-          Recent Prices ({chartData.length} total data points)
+        <h2 className="text-sm font-semibold mb-3" style={{ color: "var(--muted)" }}>
+          Recent Prices
+          <span className="font-normal ml-1">({chartData.length} total data points)</span>
         </h2>
-        <div className="overflow-x-auto max-h-80 overflow-y-auto">
-          <table className="w-full text-xs">
-            <thead className="sticky top-0" style={{ background: "var(--card-bg)" }}>
-              <tr style={{ color: "var(--muted)" }}>
-                <th className="text-left py-1 px-2">Date</th>
-                <th className="text-right py-1 px-2">Open</th>
-                <th className="text-right py-1 px-2">High</th>
-                <th className="text-right py-1 px-2">Low</th>
-                <th className="text-right py-1 px-2">Close</th>
-                <th className="text-right py-1 px-2">Volume</th>
+        <div className="overflow-x-auto" style={{ maxHeight: "20rem", overflowY: "auto" }}>
+          <table className="data-table">
+            <thead style={{ position: "sticky", top: 0, background: "var(--card-bg)" }}>
+              <tr>
+                <th>Date</th>
+                <th style={{ textAlign: "right" }}>Open</th>
+                <th style={{ textAlign: "right" }}>High</th>
+                <th style={{ textAlign: "right" }}>Low</th>
+                <th style={{ textAlign: "right" }}>Close</th>
+                <th style={{ textAlign: "right" }}>Volume</th>
               </tr>
             </thead>
             <tbody>
               {chartData.slice(-20).reverse().map((row, i) => (
-                <tr key={i} className="border-b" style={{ borderColor: "var(--card-border)" }}>
-                  <td className="py-1 px-2">{String(row.date)}</td>
-                  <td className="py-1 px-2 text-right">${Number(row.open).toFixed(2)}</td>
-                  <td className="py-1 px-2 text-right">${Number(row.high).toFixed(2)}</td>
-                  <td className="py-1 px-2 text-right">${Number(row.low).toFixed(2)}</td>
-                  <td className="py-1 px-2 text-right">${Number(row.close).toFixed(2)}</td>
-                  <td className="py-1 px-2 text-right">{Number(row.volume).toLocaleString()}</td>
+                <tr key={i}>
+                  <td>{String(row.date)}</td>
+                  <td style={{ textAlign: "right" }}>${Number(row.open).toFixed(2)}</td>
+                  <td style={{ textAlign: "right" }}>${Number(row.high).toFixed(2)}</td>
+                  <td style={{ textAlign: "right" }}>${Number(row.low).toFixed(2)}</td>
+                  <td style={{ textAlign: "right" }}>${Number(row.close).toFixed(2)}</td>
+                  <td style={{ textAlign: "right" }}>{Number(row.volume).toLocaleString()}</td>
                 </tr>
               ))}
             </tbody>

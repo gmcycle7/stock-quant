@@ -181,7 +181,7 @@ function BacktestContent() {
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Left Panel: Configuration */}
-        <div className="lg:col-span-1 space-y-4">
+        <div className="lg:col-span-1" style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
           {/* Strategy Selection */}
           <div className="card">
             <h2 className="text-sm font-semibold mb-3" style={{ color: "var(--muted)" }}>Strategy</h2>
@@ -269,35 +269,35 @@ function BacktestContent() {
             <input type="text" value={takeProfitPct} onChange={(e) => setTakeProfitPct(e.target.value)} placeholder="e.g., 15" className="input-field" />
           </div>
 
-          <button onClick={handleRun} disabled={running} className="btn-primary w-full text-center py-3">
+          <button onClick={handleRun} disabled={running} className="btn-primary" style={{ width: "100%", padding: ".75rem 1rem", textAlign: "center" }}>
             {running ? "Running Backtest..." : "Run Backtest"}
           </button>
         </div>
 
         {/* Right Panel: Results */}
-        <div className="lg:col-span-3">
+        <div className="lg:col-span-3" style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
           {error && (
-            <div className="card mb-4" style={{ borderColor: "var(--red)" }}>
+            <div className="card" style={{ borderColor: "var(--red)" }}>
               <p style={{ color: "var(--red)" }}>{error}</p>
             </div>
           )}
 
           {!result && !running && !error && (
-            <div className="card text-center py-16" style={{ color: "var(--muted)" }}>
+            <div className="card text-center" style={{ padding: "4rem 2rem", color: "var(--muted)" }}>
               Configure your backtest on the left and click &quot;Run Backtest&quot; to see results here.
             </div>
           )}
 
           {running && (
-            <div className="card text-center py-16" style={{ color: "var(--accent)" }}>
+            <div className="card text-center" style={{ padding: "4rem 2rem", color: "var(--accent)" }}>
               Running backtest... This may take a few seconds.
             </div>
           )}
 
           {result && result.metrics && (
-            <div className="space-y-4">
+            <>
               {/* Metric Cards */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              <div className="grid-4">
                 <MetricCard label="Total Return" value={result.metrics.total_return} suffix="%" positive={result.metrics.total_return >= 0} />
                 <MetricCard label="Sharpe Ratio" value={result.metrics.sharpe_ratio} positive={result.metrics.sharpe_ratio > 0.5 ? true : result.metrics.sharpe_ratio < 0 ? false : null} />
                 <MetricCard label="Max Drawdown" value={result.metrics.max_drawdown} suffix="%" positive={false} />
@@ -314,12 +314,14 @@ function BacktestContent() {
                 <button onClick={handleExportTrades} className="btn-secondary text-xs">Export Trades CSV</button>
                 <button onClick={handleExportEquity} className="btn-secondary text-xs">Export Equity CSV</button>
                 <button onClick={handleExportJSON} className="btn-secondary text-xs">Export Summary JSON</button>
-                {saveMsg && <span className="text-xs self-center" style={{ color: "var(--green)" }}>{saveMsg}</span>}
+                {saveMsg && (
+                  <span className="text-xs self-center" style={{ color: "var(--green)" }}>{saveMsg}</span>
+                )}
               </div>
 
               {/* Equity Curve */}
               <div className="card">
-                <h3 className="text-sm font-semibold mb-2" style={{ color: "var(--muted)" }}>Equity Curve</h3>
+                <h3 className="text-sm font-semibold mb-3" style={{ color: "var(--muted)" }}>Equity Curve</h3>
                 <EquityCurve
                   data={result.equity_curve}
                   benchmarkData={result.benchmark}
@@ -329,13 +331,13 @@ function BacktestContent() {
 
               {/* Drawdown */}
               <div className="card">
-                <h3 className="text-sm font-semibold mb-2" style={{ color: "var(--muted)" }}>Drawdown</h3>
+                <h3 className="text-sm font-semibold mb-3" style={{ color: "var(--muted)" }}>Drawdown</h3>
                 <DrawdownChart data={result.equity_curve} />
               </div>
 
               {/* Price with signals */}
               <div className="card">
-                <h3 className="text-sm font-semibold mb-2" style={{ color: "var(--muted)" }}>Price Chart with Signals</h3>
+                <h3 className="text-sm font-semibold mb-3" style={{ color: "var(--muted)" }}>Price Chart with Signals</h3>
                 <PriceChart
                   data={result.equity_curve.map((e) => ({ ...e, close: e.equity }))}
                   trades={result.trades}
@@ -345,40 +347,40 @@ function BacktestContent() {
 
               {/* Trade Log */}
               <div className="card">
-                <h3 className="text-sm font-semibold mb-2" style={{ color: "var(--muted)" }}>
-                  Trade Log ({result.trades.length} trades)
+                <h3 className="text-sm font-semibold mb-3" style={{ color: "var(--muted)" }}>
+                  Trade Log <span className="font-normal">({result.trades.length} trades)</span>
                 </h3>
-                <div className="overflow-x-auto max-h-80 overflow-y-auto">
-                  <table className="w-full text-xs">
-                    <thead className="sticky top-0" style={{ background: "var(--card-bg)" }}>
-                      <tr style={{ color: "var(--muted)" }}>
-                        <th className="text-left py-1 px-2">Date</th>
-                        <th className="text-left py-1 px-2">Side</th>
-                        <th className="text-right py-1 px-2">Price</th>
-                        <th className="text-right py-1 px-2">Shares</th>
-                        <th className="text-right py-1 px-2">Commission</th>
-                        <th className="text-right py-1 px-2">P&L</th>
-                        <th className="text-right py-1 px-2">P&L %</th>
-                        <th className="text-left py-1 px-2">Reason</th>
+                <div className="overflow-x-auto" style={{ maxHeight: "20rem", overflowY: "auto" }}>
+                  <table className="data-table">
+                    <thead style={{ position: "sticky", top: 0, background: "var(--card-bg)" }}>
+                      <tr>
+                        <th>Date</th>
+                        <th>Side</th>
+                        <th style={{ textAlign: "right" }}>Price</th>
+                        <th style={{ textAlign: "right" }}>Shares</th>
+                        <th style={{ textAlign: "right" }}>Commission</th>
+                        <th style={{ textAlign: "right" }}>P&L</th>
+                        <th style={{ textAlign: "right" }}>P&L %</th>
+                        <th>Reason</th>
                       </tr>
                     </thead>
                     <tbody>
                       {result.trades.map((trade, i) => (
-                        <tr key={i} className="border-b" style={{ borderColor: "var(--card-border)" }}>
-                          <td className="py-1 px-2">{trade.date}</td>
-                          <td className="py-1 px-2" style={{ color: trade.side === "buy" ? "var(--green)" : "var(--red)" }}>
+                        <tr key={i}>
+                          <td>{trade.date}</td>
+                          <td style={{ color: trade.side === "buy" ? "var(--green)" : "var(--red)", fontWeight: 600 }}>
                             {trade.side.toUpperCase()}
                           </td>
-                          <td className="py-1 px-2 text-right">${trade.price.toFixed(2)}</td>
-                          <td className="py-1 px-2 text-right">{trade.shares}</td>
-                          <td className="py-1 px-2 text-right">${trade.commission.toFixed(2)}</td>
-                          <td className="py-1 px-2 text-right" style={{ color: trade.pnl >= 0 ? "var(--green)" : "var(--red)" }}>
+                          <td style={{ textAlign: "right" }}>${trade.price.toFixed(2)}</td>
+                          <td style={{ textAlign: "right" }}>{trade.shares}</td>
+                          <td style={{ textAlign: "right" }}>${trade.commission.toFixed(2)}</td>
+                          <td style={{ textAlign: "right", color: trade.pnl >= 0 ? "var(--green)" : "var(--red)" }}>
                             {trade.side === "sell" ? `$${trade.pnl.toFixed(2)}` : "—"}
                           </td>
-                          <td className="py-1 px-2 text-right" style={{ color: trade.pnl_pct >= 0 ? "var(--green)" : "var(--red)" }}>
+                          <td style={{ textAlign: "right", color: trade.pnl_pct >= 0 ? "var(--green)" : "var(--red)" }}>
                             {trade.side === "sell" ? `${trade.pnl_pct.toFixed(2)}%` : "—"}
                           </td>
-                          <td className="py-1 px-2">{trade.reason}</td>
+                          <td>{trade.reason}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -388,17 +390,26 @@ function BacktestContent() {
 
               {/* Additional Metrics */}
               <div className="card">
-                <h3 className="text-sm font-semibold mb-2" style={{ color: "var(--muted)" }}>Detailed Metrics</h3>
+                <h3 className="text-sm font-semibold mb-3" style={{ color: "var(--muted)" }}>Detailed Metrics</h3>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-xs">
                   {Object.entries(result.metrics).map(([key, value]) => (
-                    <div key={key} className="flex justify-between p-1 border-b" style={{ borderColor: "var(--card-border)" }}>
+                    <div
+                      key={key}
+                      className="flex justify-between"
+                      style={{
+                        padding: ".3rem .5rem",
+                        borderBottom: "1px solid var(--card-border)",
+                      }}
+                    >
                       <span style={{ color: "var(--muted)" }}>{key.replace(/_/g, " ")}</span>
-                      <span>{typeof value === "number" ? value.toLocaleString(undefined, { maximumFractionDigits: 3 }) : value}</span>
+                      <span style={{ fontWeight: 600 }}>
+                        {typeof value === "number" ? value.toLocaleString(undefined, { maximumFractionDigits: 3 }) : value}
+                      </span>
                     </div>
                   ))}
                 </div>
               </div>
-            </div>
+            </>
           )}
         </div>
       </div>

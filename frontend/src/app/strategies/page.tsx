@@ -13,10 +13,10 @@ import Link from "next/link";
 import { fetchStrategies, StrategyInfo } from "@/lib/api";
 
 const CATEGORY_COLORS: Record<string, string> = {
-  trend: "#3b82f6",
-  mean_reversion: "#22c55e",
-  momentum: "#f59e0b",
-  general: "#94a3b8",
+  trend: "var(--accent)",
+  mean_reversion: "var(--green)",
+  momentum: "var(--yellow)",
+  general: "var(--muted)",
 };
 
 export default function StrategiesPage() {
@@ -30,7 +30,13 @@ export default function StrategiesPage() {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <div className="text-center py-12" style={{ color: "var(--muted)" }}>Loading strategies...</div>;
+  if (loading) {
+    return (
+      <div className="text-center" style={{ padding: "3rem 0", color: "var(--muted)" }}>
+        Loading strategies...
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -44,15 +50,15 @@ export default function StrategiesPage() {
         {strategies.map((strategy) => (
           <div key={strategy.name} className="card">
             {/* Header */}
-            <div className="flex items-start justify-between mb-2">
+            <div className="flex items-start justify-between mb-3">
               <div>
-                <h2 className="text-lg font-bold">{strategy.display_name}</h2>
+                <h2 className="text-lg font-bold mb-1">{strategy.display_name}</h2>
                 <span
-                  className="text-xs px-2 py-0.5 rounded-full inline-block mt-1"
+                  className="text-xs font-semibold px-2 py-1 rounded-full inline-block"
                   style={{
-                    background: CATEGORY_COLORS[strategy.category] || "#94a3b8",
-                    color: "white",
-                    opacity: 0.8,
+                    background: CATEGORY_COLORS[strategy.category] || "var(--muted)",
+                    color: "#fff",
+                    opacity: 0.9,
                   }}
                 >
                   {strategy.category.replace("_", " ")}
@@ -67,24 +73,35 @@ export default function StrategiesPage() {
             </div>
 
             {/* Description */}
-            <p className="text-sm mb-3" style={{ color: "var(--muted)" }}>
+            <p className="text-sm mb-4" style={{ color: "var(--muted)" }}>
               {strategy.description}
             </p>
 
             {/* Parameters */}
             <div>
-              <h3 className="text-xs font-semibold mb-1" style={{ color: "var(--muted)" }}>
+              <h3 className="text-xs font-semibold mb-2" style={{ color: "var(--muted)", textTransform: "uppercase", letterSpacing: "0.05em" }}>
                 Parameters
               </h3>
-              <div className="space-y-1">
+              <div style={{ display: "flex", flexDirection: "column", gap: ".375rem" }}>
                 {strategy.parameters.map((param) => (
-                  <div key={param.name} className="flex items-center justify-between text-xs">
-                    <span style={{ color: "var(--foreground)" }}>{param.name}</span>
+                  <div
+                    key={param.name}
+                    className="flex items-center justify-between text-xs"
+                    style={{
+                      padding: ".3rem .5rem",
+                      borderRadius: ".375rem",
+                      background: "var(--background)",
+                    }}
+                  >
+                    <span style={{ color: "var(--foreground)", fontWeight: 500 }}>{param.name}</span>
                     <span style={{ color: "var(--muted)" }}>
                       {param.type === "select"
                         ? param.options?.join(" | ")
                         : `${param.min ?? ""}–${param.max ?? ""}`}
-                      {" "}(default: {String(param.default)})
+                      {" "}
+                      <span style={{ color: "var(--accent)" }}>
+                        (default: {String(param.default)})
+                      </span>
                     </span>
                   </div>
                 ))}
@@ -95,7 +112,7 @@ export default function StrategiesPage() {
       </div>
 
       {strategies.length === 0 && (
-        <div className="card text-center" style={{ color: "var(--muted)" }}>
+        <div className="card text-center" style={{ padding: "3rem", color: "var(--muted)" }}>
           No strategies loaded. Make sure the backend is running.
         </div>
       )}
